@@ -1,22 +1,22 @@
 package sample;
 
 import javafx.scene.Parent;
-import sample.controller.Controller;
+import sample.controller.LevelEditor;
 
 public class GameManager {
 
     private int fps;
      private Parent root;
 
-     private Controller controller;
+     private LevelEditor levelEditor;
 
 
 
-     public GameManager(int fps, Controller controller, Parent root){
-         this.controller = controller;
+     public GameManager(int fps, LevelEditor levelEditor, Parent root){
+         this.levelEditor = levelEditor;
          this.root = root;
          startGame(fps);
-         controller.startInterface();
+         levelEditor.startEditor();
 
      }
 

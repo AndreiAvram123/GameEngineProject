@@ -9,19 +9,23 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <?import sample.model.CustomShape?>
-<VBox fx:controller="sample.controller.Controller" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:controller="sample.controller.LevelEditor" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane prefHeight="800.0" prefWidth="1200.0">
-         <children>
+
+
             <Canvas layoutX="225.0" layoutY="50" width="700" height="700"
                   fx:id="canvas"
             />
 
-            <Pane layoutX="990.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #F0F0F0;">
+
+
+            <Pane layoutX="990.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #ACC3DE;">
                <children>
                   <VBox layoutX="6.0" layoutY="6.0" prefHeight="689.0" prefWidth="189.0">
                      <children>
@@ -87,13 +91,15 @@
                   </VBox>
                </children>
             </Pane>
-            <Pane layoutX="10.0" layoutY="30.0" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #F0F0F0;" />
+            <Pane fx:id="objectSelector" layoutX="10.0" layoutY="30.0" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #ACC3DE;">
+             <Rectangle fx:id ="squareObject" layoutX="20.0" layoutY="20.0" width="100" height="100" fill="red"></Rectangle>
+              <Rectangle fx:id ="rectangleObject" layoutX="20.0" layoutY="220.0" width="150" height="100" fill="red"></Rectangle>
+             </Pane>
             <Button layoutX="565.0" layoutY="12.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="76.0" text="Play" textFill="RED">
                <font>
                   <Font name="System Bold Italic" size="12.0" />
                </font>
             </Button>
-         </children>
-      </AnchorPane>
+         </AnchorPane>
    </children>
 </VBox>

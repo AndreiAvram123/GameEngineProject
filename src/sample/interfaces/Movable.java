@@ -1,4 +1,4 @@
-package sample;
+package sample.interfaces;
 
 public interface Movable {
     void moveRight();

@@ -1,33 +1,48 @@
 package sample.model;
 
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.ArrayList;
 
 public abstract class CustomShape{
 
     private String name;
-    protected GraphicsContext graphicsContext;
-    protected int x;
-    protected int y;
-    protected int height =100;
-    protected int width = 100;
+    GraphicsContext graphicsContext;
+    int x;
+    int y;
+    int height =100;
+    int width = 100;
+    private ArrayList<Component> components;
+
 
     public CustomShape(GraphicsContext graphicsContext,String name,int x,int y){
         this.name = name;
         this.graphicsContext = graphicsContext;
         this.x = x;
         this.y = y;
+        components = new ArrayList<>();
     }
-    public CustomShape(GraphicsContext graphicsContext,String name,int x,int y,int width,int height){
+    CustomShape(GraphicsContext graphicsContext, String name, int x, int y, int width, int height){
         this.name = name;
         this.graphicsContext = graphicsContext;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        components = new ArrayList<>();
+    }
+
+    void addComponent(Component component){
+      components.add(component);
+    }
+
+    public RigidBody getRigidBody(){
+        for(Component component: components){
+            if(component instanceof RigidBody){
+                return (RigidBody)component;
+            }
+        }
+        return null;
     }
 
     public int getHeight() {
@@ -71,8 +86,9 @@ public abstract class CustomShape{
     }
 
 
-    private void update(){
+    public void update(){
           drawShape();
+          produceComponentsEffect();
         //        timer = new Timer();
 //        timer.schedule(new TimerTask() {
 //            @Override
@@ -83,6 +99,12 @@ public abstract class CustomShape{
 //        },0,100);
     }
 
-    public abstract void drawShape();
+    private void produceComponentsEffect() {
+        for(Component component: components){
+            component.causeEffect();
+        }
+    }
+
+    abstract void drawShape();
 
 }

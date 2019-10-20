@@ -1,6 +1,8 @@
-package sample;
+package sample.model;
 
-public class Player implements Movable{
+import sample.interfaces.Movable;
+
+public class Player implements Movable {
      private double speedX;
      private double speedY;
 
