@@ -1,49 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<?import sample.model.CustomShape?>
-<VBox fx:controller="sample.controller.LevelEditor" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color:#ACC3DE; " xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.LevelEditor">
    <children>
       <AnchorPane prefHeight="800.0" prefWidth="1200.0">
 
 
-            <Canvas layoutX="225.0" layoutY="50" width="700" height="700"
-                  fx:id="canvas"
-            />
+            <Canvas fx:id="canvas" height="750.0" layoutX="220.0" layoutY="50.0" style="-fx-background-color:#FAFAFA " width="750.0" />
 
-
-
-            <Pane layoutX="990.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #ACC3DE;">
+            <Pane layoutX="990.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #5999E3;">
                <children>
                   <VBox layoutX="6.0" layoutY="6.0" prefHeight="689.0" prefWidth="189.0">
                      <children>
-                        <Label alignment="CENTER" prefHeight="18.0" prefWidth="216.0" fx:id="objectName">
-                           <font>
-                              <Font size="22.0" />
-                           </font>
-                        </Label>
+                        <TextField fx:id="objectName" alignment="CENTER" prefHeight="10.0" prefWidth="10">
+                        </TextField>
                         <HBox prefHeight="40.0" prefWidth="190.0">
+
                            <children>
                               <Label contentDisplay="CENTER" prefHeight="18.0" prefWidth="66.0" text="X" textAlignment="JUSTIFY">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <TextField prefHeight="32.0" prefWidth="106.0"  fx:id="xTextField"/>
+                              <TextField prefHeight="32.0" prefWidth="106.0" fx:id="xTextField" />
                            </children>
                         </HBox>
+
                         <HBox layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="190.0">
                            <children>
                               <Label contentDisplay="CENTER" prefHeight="18.0" prefWidth="66.0" text="Y" textAlignment="JUSTIFY">
@@ -51,7 +38,7 @@
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <TextField prefHeight="32.0" prefWidth="106.0" fx:id="yTextField"/>
+                              <TextField fx:id="yTextField" prefHeight="32.0" prefWidth="106.0" />
                            </children>
                         </HBox>
                         <HBox layoutX="10.0" layoutY="50.0" prefHeight="40.0" prefWidth="190.0">
@@ -61,7 +48,7 @@
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <TextField prefHeight="32.0" prefWidth="106.0" fx:id="widthTextField" />
+                              <TextField fx:id="widthTextField" prefHeight="32.0" prefWidth="106.0" />
                            </children>
                         </HBox>
                         <HBox layoutX="10.0" layoutY="90.0" prefHeight="40.0" prefWidth="190.0">
@@ -71,31 +58,45 @@
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <TextField prefHeight="32.0" prefWidth="106.0" fx:id="heightTextField" />
+                              <TextField fx:id="heightTextField" prefHeight="32.0" prefWidth="106.0" />
                            </children>
                         </HBox>
-                        <HBox prefHeight="493.0" prefWidth="190.0">
+                              <CheckBox fx:id="playerCheckbox" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;-fx-text-fill: #000000" text="Player" />
+                        <HBox prefHeight="200.0" prefWidth="190.0">
                            <children>
                               <TitledPane animated="false" prefHeight="174.0" prefWidth="190.0" text="RigidBody">
                                  <content>
                                     <VBox prefHeight="200.0" prefWidth="100.0">
                                        <children>
-                                          <CheckBox fx:id ="gravityCheckbox" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;" text="Gravity" />
+                                          <CheckBox fx:id="gravityCheckbox" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;" text="Gravity" />
                                        </children>
                                     </VBox>
                                  </content>
                               </TitledPane>
                            </children>
                         </HBox>
+                        <HBox prefHeight="200.0" prefWidth="190.0">
+                           <children>
+                              <TitledPane animated="false" prefHeight="174.0" prefWidth="190.0" text="RigidBody">
+                                 <content>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <CheckBox fx:id="colliderCheckbox" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;" text="Collider" />
+                                       </children>
+                                    </VBox>
+                                 </content>
+                              </TitledPane>
+                           </children>
+                        </HBox>
+
                      </children>
                   </VBox>
                </children>
             </Pane>
-            <Pane fx:id="objectSelector" layoutX="10.0" layoutY="30.0" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #ACC3DE;">
-             <Rectangle fx:id ="squareObject" layoutX="20.0" layoutY="20.0" width="100" height="100" fill="red"></Rectangle>
-              <Rectangle fx:id ="rectangleObject" layoutX="20.0" layoutY="220.0" width="150" height="100" fill="red"></Rectangle>
+            <Pane fx:id="objectSelector" layoutX="10.0" layoutY="30.0" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #5999E3">
+             <Rectangle fx:id="squareObject" fill="blue" height="100" width="100" x="40.0" y="40.0" />
              </Pane>
-            <Button layoutX="565.0" layoutY="12.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="76.0" text="Play" textFill="RED">
+            <Button fx:id="playButton" layoutX="565.0" layoutY="12.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="76.0" text="Play" textFill="RED">
                <font>
                   <Font name="System Bold Italic" size="12.0" />
                </font>

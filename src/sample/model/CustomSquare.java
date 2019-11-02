@@ -9,22 +9,19 @@ import java.awt.*;
 public class CustomSquare extends CustomShape  {
 
 
-    public CustomSquare(GraphicsContext graphicsContext, String name, int x, int y) {
+    public CustomSquare(GraphicsContext graphicsContext, String name, double x, double y) {
         super(graphicsContext, name,x,y);
-        addComponent(new RigidBody(this));
-    }
-    public CustomSquare(GraphicsContext graphicsContext, String name, int x, int y, int width, int height){
-        super(graphicsContext,name,x,y,width,height);
-        addComponent(new RigidBody(this));
+
     }
 
 
     @Override
      void drawShape() {
       graphicsContext.setLineWidth(2.0);
-      graphicsContext.setFill(Color.RED);
+      graphicsContext.setFill(Color.BLUE);
       graphicsContext.fillRect(x,y,width,height);
     }
+
 
 
 }

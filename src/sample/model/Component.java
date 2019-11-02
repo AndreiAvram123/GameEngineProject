@@ -7,5 +7,6 @@ public abstract class Component {
         this.customShape = customShape;
     }
 
+
     public abstract void causeEffect();
 }

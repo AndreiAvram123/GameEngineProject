@@ -6,6 +6,7 @@ public class RigidBody extends Component {
    private double mass = 1.0;
    private boolean hasGravity = false;
 
+
     public RigidBody(CustomShape customShape) {
         super(customShape);
     }
@@ -18,8 +19,12 @@ public class RigidBody extends Component {
         this.mass = mass;
     }
 
+
     public void setHasGravity(boolean hasGravity){
         this.hasGravity  = hasGravity;
+    }
+    public boolean hasGravity(){
+        return hasGravity;
     }
 
     @Override

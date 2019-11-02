@@ -8,56 +8,87 @@ public abstract class CustomShape{
 
     private String name;
     GraphicsContext graphicsContext;
-    int x;
-    int y;
-    int height =100;
-    int width = 100;
+    double x;
+    double y;
+    double height =100;
+    double width = 100;
     private ArrayList<Component> components;
 
+    public static double getDefaultWidth(){
+        return 100;
+    }
+    public static double getDefaultHeight(){
+        return 100;
+    }
+    private void addDefaultComponents(){
+        addComponent(new RigidBody(this));
+        addComponent(new Collider(this));
+    }
 
-    public CustomShape(GraphicsContext graphicsContext,String name,int x,int y){
+    public CustomShape(GraphicsContext graphicsContext,String name,double x,double y){
         this.name = name;
         this.graphicsContext = graphicsContext;
         this.x = x;
         this.y = y;
         components = new ArrayList<>();
-    }
-    CustomShape(GraphicsContext graphicsContext, String name, int x, int y, int width, int height){
-        this.name = name;
-        this.graphicsContext = graphicsContext;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        components = new ArrayList<>();
+        addDefaultComponents();
     }
 
-    void addComponent(Component component){
+    public boolean hasComponent(String className){
+        for(Component component : components) {
+            if(component.getClass().getSimpleName().equals(className)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void  removeComponent(String className){
+        for(Component component : components) {
+            if(component.getClass().getSimpleName().equals(className)) {
+                components.remove(component);
+            }
+        }
+    }
+
+    public void addComponent(Component component){
       components.add(component);
     }
 
-    public RigidBody getRigidBody(){
-        for(Component component: components){
-            if(component instanceof RigidBody){
-                return (RigidBody)component;
+    public Component getComponent(String className){
+        for(Component component : components) {
+            if(component.getClass().getSimpleName().equals(className)) {
+                return component;
             }
         }
         return null;
     }
 
-    public int getHeight() {
+
+    public void updateGraphicsContext(GraphicsContext graphicsContext){
+        this.graphicsContext = graphicsContext;
+    }
+
+
+    public boolean isShapeWithinRange(double x, double y) {
+            return (getX() <= x && getY() <= y)
+                    && (getHeight() + getY() >= y && getWidth() + getX() >= x);
+
+    }
+
+    public double getHeight() {
         return height;
     }
 
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(double width) {
         this.width = width;
     }
 
@@ -69,19 +100,19 @@ public abstract class CustomShape{
         this.name = name;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 
@@ -89,14 +120,7 @@ public abstract class CustomShape{
     public void update(){
           drawShape();
           produceComponentsEffect();
-        //        timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//               //todo
-//                //implement gravity
-//            }
-//        },0,100);
+
     }
 
     private void produceComponentsEffect() {
