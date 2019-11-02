@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -18,7 +19,9 @@
                   <VBox layoutX="6.0" layoutY="6.0" prefHeight="689.0" prefWidth="189.0">
                      <children>
                         <TextField fx:id="objectName" alignment="CENTER" prefHeight="10.0" prefWidth="10">
-                        </TextField>
+                        <VBox.margin>
+                           <Insets bottom="20.0" />
+                        </VBox.margin></TextField>
                         <HBox prefHeight="40.0" prefWidth="190.0">
 
                            <children>
@@ -29,6 +32,9 @@
                               </Label>
                               <TextField prefHeight="32.0" prefWidth="106.0" fx:id="xTextField" />
                            </children>
+                        <VBox.margin>
+                           <Insets bottom="5.0" />
+                        </VBox.margin>
                         </HBox>
 
                         <HBox layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="190.0">
@@ -40,6 +46,9 @@
                               </Label>
                               <TextField fx:id="yTextField" prefHeight="32.0" prefWidth="106.0" />
                            </children>
+                        <VBox.margin>
+                           <Insets bottom="5.0" />
+                        </VBox.margin>
                         </HBox>
                         <HBox layoutX="10.0" layoutY="50.0" prefHeight="40.0" prefWidth="190.0">
                            <children>
@@ -50,6 +59,9 @@
                               </Label>
                               <TextField fx:id="widthTextField" prefHeight="32.0" prefWidth="106.0" />
                            </children>
+                        <VBox.margin>
+                           <Insets bottom="5.0" />
+                        </VBox.margin>
                         </HBox>
                         <HBox layoutX="10.0" layoutY="90.0" prefHeight="40.0" prefWidth="190.0">
                            <children>
@@ -60,34 +72,43 @@
                               </Label>
                               <TextField fx:id="heightTextField" prefHeight="32.0" prefWidth="106.0" />
                            </children>
+                        <VBox.margin>
+                           <Insets bottom="5.0" />
+                        </VBox.margin>
                         </HBox>
+                     <HBox prefHeight="40.0" prefWidth="190.0">
+                        <children>
+                           <Label contentDisplay="CENTER" prefWidth="66.0" text="Color" textAlignment="JUSTIFY">
+                              <font>
+                                 <Font size="20.0" />
+                              </font>
+                           </Label>
+                           <TextField fx:id="colorTextField" prefHeight="30.0" prefWidth="108.0" />
+                        </children>
+                        <VBox.margin>
+                           <Insets bottom="5.0" />
+                        </VBox.margin>
+                     </HBox>
                               <CheckBox fx:id="playerCheckbox" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;-fx-text-fill: #000000" text="Player" />
                         <HBox prefHeight="200.0" prefWidth="190.0">
                            <children>
-                              <TitledPane animated="false" prefHeight="174.0" prefWidth="190.0" text="RigidBody">
+                              <TitledPane animated="false" prefHeight="161.0" prefWidth="190.0" text="RigidBody">
                                  <content>
                                     <VBox prefHeight="200.0" prefWidth="100.0">
                                        <children>
+                                          <CheckBox fx:id="colliderCheckbox" mnemonicParsing="false" prefHeight="23.0" prefWidth="168.0" style="-fx-padding: 5;" text="Collider" />
                                           <CheckBox fx:id="gravityCheckbox" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;" text="Gravity" />
                                        </children>
                                     </VBox>
                                  </content>
+                              <HBox.margin>
+                                 <Insets top="10.0" />
+                              </HBox.margin>
                               </TitledPane>
                            </children>
                         </HBox>
-                        <HBox prefHeight="200.0" prefWidth="190.0">
-                           <children>
-                              <TitledPane animated="false" prefHeight="174.0" prefWidth="190.0" text="RigidBody">
-                                 <content>
-                                    <VBox prefHeight="200.0" prefWidth="100.0">
-                                       <children>
-                                          <CheckBox fx:id="colliderCheckbox" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;" text="Collider" />
-                                       </children>
-                                    </VBox>
-                                 </content>
-                              </TitledPane>
-                           </children>
-                        </HBox>
+                        <HBox prefHeight="200.0" prefWidth="190.0" />
+                     <HBox prefHeight="100.0" prefWidth="200.0" />
 
                      </children>
                   </VBox>

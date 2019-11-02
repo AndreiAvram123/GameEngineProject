@@ -1,10 +1,12 @@
 package sample.model;
 
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
-public abstract class CustomShape{
+public abstract class CustomShape extends Node{
 
     private String name;
     GraphicsContext graphicsContext;
@@ -13,17 +15,17 @@ public abstract class CustomShape{
     double height =100;
     double width = 100;
     private ArrayList<Component> components;
+    protected String colorCode;
 
-    public static double getDefaultWidth(){
-        return 100;
-    }
-    public static double getDefaultHeight(){
-        return 100;
-    }
     private void addDefaultComponents(){
         addComponent(new RigidBody(this));
         addComponent(new Collider(this));
     }
+    public void setNewCenter(double x, double y){
+        this.x = x - width/2;
+        this.y = y - height/2;
+    }
+
 
     public CustomShape(GraphicsContext graphicsContext,String name,double x,double y){
         this.name = name;
@@ -32,6 +34,7 @@ public abstract class CustomShape{
         this.y = y;
         components = new ArrayList<>();
         addDefaultComponents();
+        colorCode = "#0000ff";
     }
 
     public boolean hasComponent(String className){
@@ -69,6 +72,13 @@ public abstract class CustomShape{
         this.graphicsContext = graphicsContext;
     }
 
+    public String getColorCode() {
+        return colorCode;
+    }
+
+    public void setColorCode(String colorCode) {
+        this.colorCode = colorCode;
+    }
 
     public boolean isShapeWithinRange(double x, double y) {
             return (getX() <= x && getY() <= y)

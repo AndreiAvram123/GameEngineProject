@@ -1,7 +1,6 @@
 package sample.controller;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,8 +20,6 @@ import sample.model.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class LevelEditor {
     @FXML
@@ -46,16 +43,18 @@ public class LevelEditor {
     private
     TextField heightTextField;
     @FXML
+    TextField colorTextField;
+    @FXML
     CheckBox gravityCheckbox;
     @FXML
     CheckBox colliderCheckbox;
     @FXML
     CheckBox playerCheckbox;
 
+
     private Shape currentShapeSelected;
     private GraphicsContext graphicsContext;
-    private Inspector inspector;
-    private CollisionDetection collisionDetection;
+    // private CollisionDetection collisionDetection;
     private ArrayList<CustomShape> objectsOnCanvas;
     private CustomShape currentShape;
     private boolean playerExists = false;
@@ -67,7 +66,6 @@ public class LevelEditor {
         offsetCanvasY = canvas.getLayoutY();
         graphicsContext = canvas.getGraphicsContext2D();
         objectsOnCanvas = new ArrayList<>();
-        collisionDetection = new CollisionDetection();
         initializeInspector();
         initializeObjectSelector();
         updateCanvas();
@@ -75,7 +73,6 @@ public class LevelEditor {
     }
 
     private void attachListenerToPlayButton() {
-
         playButton.setOnAction(event -> {
             try {
                 startGameScene(event);
@@ -109,13 +106,14 @@ public class LevelEditor {
         setListenerOnObjectSelected(squareObject);
         setListenerOnMouseDragged();
         setActionOnMouseReleased();
+        addListenerToCanvas();
 
     }
 
     private void setListenerOnMouseDragged() {
         squareObject.setOnMouseDragged(event -> {
-            squareObject.setX(event.getX() - CustomShape.getDefaultWidth() / 2);
-            squareObject.setY(event.getY() - CustomShape.getDefaultHeight() / 2);
+            squareObject.setX(event.getX() - squareObject.getWidth()/ 2);
+            squareObject.setY(event.getY() - squareObject.getHeight()/ 2);
         });
 
     }
@@ -123,14 +121,24 @@ public class LevelEditor {
     private void setActionOnMouseReleased() {
         squareObject.setOnMouseReleased(event -> {
             if (isObjectWithinCanvas(event.getSceneX(), event.getSceneY())) {
-                CustomSquare customSquare = new CustomSquare(graphicsContext, "Square", event.getSceneX() - CustomSquare.getDefaultWidth() / 2 - offsetCanvasX,
-                        event.getSceneY() - CustomSquare.getDefaultHeight() / 2 - offsetCanvasY);
+                CustomSquare customSquare = new CustomSquare(graphicsContext, "Square", 0,0);
+                customSquare.setNewCenter( event.getSceneX() - offsetCanvasX,event.getSceneY() - offsetCanvasY);
                 objectsOnCanvas.add(customSquare);
             }
             //return to default position
             squareObject.setX(20);
             squareObject.setY(20);
 
+        });
+    }
+
+    private void addListenerToCanvas() {
+        canvas.setOnMouseDragged(event -> {
+           for(CustomShape customShape: objectsOnCanvas){
+              if(customShape.isShapeWithinRange(event.getX(),event.getY())){
+                 customShape.setNewCenter(event.getX(),event.getY());
+              }
+           }
         });
     }
 
@@ -150,24 +158,21 @@ public class LevelEditor {
         });
     }
 
-
     private void updateCanvas() {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        AnimationTimer animationTimer = new AnimationTimer() {
             @Override
-            public void run() {
-                collisionDetection.checkCollision();
+            public void handle(long now) {
                 updateGraphicsContextBackground();
                 for (CustomShape customShape : objectsOnCanvas) {
                     customShape.update();
                 }
-
             }
-        }, 0, 100);
+        };
+        animationTimer.start();
     }
 
     private void initializeInspector() {
-        inspector = new Inspector(canvas, this);
+        Inspector inspector = new Inspector(canvas, this);
         inspector.start();
         attachListenerToFields();
     }
@@ -178,12 +183,10 @@ public class LevelEditor {
         graphicsContext.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
-
     void inspectObject(CustomShape customShape) {
         currentShape = customShape;
         updateFields();
     }
-
 
     private void updateFields() {
         if (currentShape != null) {
@@ -191,9 +194,10 @@ public class LevelEditor {
             yTextField.setText(currentShape.getY() + "");
             widthTextField.setText(currentShape.getWidth() + "");
             heightTextField.setText(currentShape.getHeight() + "");
+            colorTextField.setText(currentShape.getColorCode());
             objectName.setText(currentShape.getName());
-            gravityCheckbox.setSelected(((RigidBody)currentShape.getComponent(RigidBody.class.getSimpleName())).hasGravity());
-            colliderCheckbox.setSelected(((Collider)currentShape.getComponent(Collider.class.getSimpleName())).isEnabled());
+            gravityCheckbox.setSelected(((RigidBody) currentShape.getComponent(RigidBody.class.getSimpleName())).hasGravity());
+            colliderCheckbox.setSelected(((Collider) currentShape.getComponent(Collider.class.getSimpleName())).isEnabled());
             playerCheckbox.setSelected(currentShape.hasComponent(Player.class.getSimpleName()));
         }
     }
@@ -231,14 +235,25 @@ public class LevelEditor {
                 currentShape.setHeight(Double.parseDouble(newValue));
             }
         });
-        gravityCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        colorTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (currentShape == null) return;
-            ((RigidBody)currentShape.getComponent(RigidBody.class.getSimpleName())).setHasGravity(newValue);
-        }
+            try {
+                Color color = Color.web(newValue);
+                currentShape.setColorCode(newValue);
+            } catch (Exception e) {
+                System.out.println("Not a color hex code");
+            }
+        });
+
+
+        gravityCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (currentShape == null) return;
+                    ((RigidBody) currentShape.getComponent(RigidBody.class.getSimpleName())).setHasGravity(newValue);
+                }
         );
         colliderCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (currentShape == null) return;
-            ((Collider)currentShape.getComponent(Collider.class.getSimpleName())).setEnabled(newValue);
+            ((Collider) currentShape.getComponent(Collider.class.getSimpleName())).setEnabled(newValue);
         });
 
         playerCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -255,14 +270,12 @@ public class LevelEditor {
         });
     }
 
-
     private boolean isStringDouble(String string) {
         if (!string.trim().isEmpty()) {
             try {
                 double x = Double.parseDouble(string);
                 return true;
-            } catch (NumberFormatException e) {
-                System.out.println("NOT A DOUBLE");
+            } catch (NumberFormatException ignored) {
             }
         }
         return false;
