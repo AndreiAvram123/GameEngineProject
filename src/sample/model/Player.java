@@ -1,35 +1,37 @@
 package sample.model;
 import sample.interfaces.Movable;
+import sample.model.shapes.CustomShape;
+import sample.model.shapes.CustomSquare;
 
 public class  Player  implements Movable {
      private int speedX;
      private int speedY;
-     private  CustomShape customShape;
+     private CustomSquare customShape;
 
-     public Player(CustomShape customShape){
-         this.customShape = customShape;
+     public Player(CustomSquare customSquare){
+         this.customShape = customSquare;
          speedX =10;
          speedY =10;
        }
 
     @Override
     public void moveRight() {
-        customShape.setX(customShape.getX()+speedX);
+        customShape.getTopLeft().setX(customShape.getTopLeft().getX()+speedX);
     }
 
     @Override
     public void moveLeft() {
-        customShape.setX(customShape.getX()-speedX);
+        customShape.getTopLeft().setX(customShape.getTopLeft().getX()- speedX);
     }
 
     @Override
     public void moveDown(){
-        customShape.setY(customShape.getY() + speedY);
+        customShape.getTopLeft().setY(customShape.getTopLeft().getY()+ speedY);
     }
 
     @Override
     public void moveUp() {
-        customShape.setY(customShape.getY() - speedY);
+        customShape.getTopLeft().setY(customShape.getTopLeft().getY() - speedY);
     }
 
 

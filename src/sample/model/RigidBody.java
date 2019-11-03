@@ -1,30 +1,15 @@
 package sample.model;
 
+import sample.model.shapes.CustomSquare;
+
 public class RigidBody extends Component {
 
    private double gravityForce =9.81;
    private double mass = 1.0;
-   private boolean hasGravity = false;
 
 
-    public RigidBody(CustomShape customShape) {
-        super(customShape);
-    }
-
-    public void setGravityForce(double gravityForce){
-        this.gravityForce = gravityForce;
-    }
-
-    public void setMass(double mass){
-        this.mass = mass;
-    }
-
-
-    public void setHasGravity(boolean hasGravity){
-        this.hasGravity  = hasGravity;
-    }
-    public boolean hasGravity(){
-        return hasGravity;
+    public RigidBody(CustomSquare customSquare) {
+        super(customSquare);
     }
 
     @Override
@@ -33,8 +18,6 @@ public class RigidBody extends Component {
         }
 
     private void causeGravity() {
-        if(hasGravity) {
-            customShape.setY(customShape.getY() + (int)(gravityForce*mass));
-        }
-        }
+      customSquare.getTopLeft().setY(customSquare.getTopLeft().getY() + gravityForce*mass);
+   }
 }

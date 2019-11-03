@@ -1,4 +1,4 @@
-package sample.model;
+package sample.model.enums;
 
 public enum TAGS {
     NONE("NONE"), PLAYER("PLAYER"), ENEMY("ENEMY"), COLLECTABLE("COLLECTABLE"), CHECKPOINT("CHECKPOINT");
@@ -12,7 +12,7 @@ public enum TAGS {
         return name;
     }
 
-    public  static TAGS getObjectByName(String name) {
+    public static TAGS getObjectByName(String name) {
         switch (name) {
             case "PLAYER":
                 return PLAYER;

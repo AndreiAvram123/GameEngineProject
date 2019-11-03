@@ -1,10 +1,13 @@
 package sample.model;
 
-public abstract class Component {
-    protected CustomShape customShape;
+import sample.model.shapes.CustomShape;
+import sample.model.shapes.CustomSquare;
 
-    public Component(CustomShape customShape){
-        this.customShape = customShape;
+public abstract class Component {
+    protected CustomSquare customSquare;
+
+    public Component(CustomSquare customSquare){
+        this.customSquare = customSquare;
     }
 
 

@@ -101,19 +101,20 @@
                      </HBox>
                         <HBox prefHeight="200.0" prefWidth="190.0">
                            <children>
-                              <TitledPane animated="false" prefHeight="161.0" prefWidth="190.0" text="RigidBody">
-                                 <content>
-                                    <VBox prefHeight="200.0" prefWidth="100.0">
-                                       <children>
-                                          <CheckBox fx:id="colliderCheckbox" mnemonicParsing="false" prefHeight="23.0" prefWidth="168.0" style="-fx-padding: 5;" text="Collider" />
-                                          <CheckBox fx:id="gravityCheckbox" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;" text="Gravity" />
-                                       </children>
-                                    </VBox>
-                                 </content>
-                              <HBox.margin>
-                                 <Insets top="10.0" />
-                              </HBox.margin>
-                              </TitledPane>
+                              <VBox prefHeight="200.0" prefWidth="190.0">
+                              <children>
+                                    <CheckBox fx:id="colliderCheckbox" mnemonicParsing="false" prefHeight="27.0" prefWidth="190.0" style="-fx-padding: 5;" text="BoxCollider">
+                                    <font>
+                                       <Font size="20.0" />
+                                    </font>
+                                 </CheckBox>
+                                    <CheckBox fx:id="gravityCheckbox" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;" text="RigidBody">
+                                    <font>
+                                       <Font size="20.0" />
+                                    </font>
+                                 </CheckBox>
+                              </children>
+                              </VBox>
                            </children>
                         </HBox>
                         <HBox prefHeight="200" prefWidth="100">

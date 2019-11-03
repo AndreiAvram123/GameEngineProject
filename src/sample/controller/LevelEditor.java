@@ -15,10 +15,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import jogamp.nativetag.common.linux.i586.TAG;
 import sample.model.*;
+import sample.model.enums.TAGS;
+import sample.model.physics.BoxCollider;
+import sample.model.shapes.CustomShape;
+import sample.model.shapes.CustomSquare;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,14 +45,14 @@ public class LevelEditor {
     @FXML Button deleteObjectButton;
     @FXML ComboBox tagComboBox;
 
-    private Shape currentShapeSelected;
     private GraphicsContext graphicsContext;
-    private ArrayList<CustomShape> objectsOnCanvas = new ArrayList<>();
-    private CustomShape currentShape;
+    private ArrayList<CustomSquare> objectsOnCanvas = new ArrayList<>();
+    private CustomSquare currentShapeSelected;
     private boolean playerExists = false;
     private Point canvasInitialPoint;
     private Point squareInitialPoint;
     private Stage stage;
+
 
     public void startEditor(Stage stage) {
         this.stage = stage;
@@ -81,7 +85,7 @@ public class LevelEditor {
 
     }
 
-    ArrayList<CustomShape> getObjectsOnCanvas() {
+    ArrayList<CustomSquare> getObjectsOnCanvas() {
          return objectsOnCanvas;
 
     }
@@ -155,19 +159,18 @@ public class LevelEditor {
     }
 
     public void changeTag(){
-        if(currentShape!=null){
+        if(currentShapeSelected !=null){
             if(TAGS.getObjectByName(tagComboBox.getValue().toString())== TAGS.PLAYER){
                 setPlayerTag();
             }else{
-                currentShape.setTag(TAGS.getObjectByName(tagComboBox.getValue().toString()));
+                currentShapeSelected.setTag(TAGS.getObjectByName(tagComboBox.getValue().toString()));
             }
-            tagComboBox.setValue(currentShape.getTag().getName());
         }
     }
 
     private void setPlayerTag() {
         if(!playerExists){
-            currentShape.setTag(TAGS.PLAYER);
+            currentShapeSelected.setTag(TAGS.PLAYER);
             playerExists = true;
         }
     }
@@ -177,13 +180,13 @@ public class LevelEditor {
         graphicsContext.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
-    void inspectObject(CustomShape customShape) {
-        currentShape = customShape;
+    void inspectObject(CustomSquare customSquare) {
+        currentShapeSelected = customSquare;
         updateFields();
     }
 
     private void updateFields() {
-        if (currentShape != null) {
+        if (currentShapeSelected != null) {
             getShapeValues();
         }else{
             emptyFields();
@@ -204,15 +207,15 @@ public class LevelEditor {
     }
 
     private void getShapeValues() {
-        xTextField.setText(currentShape.getX() + "");
-        yTextField.setText(currentShape.getY() + "");
-        widthTextField.setText(currentShape.getWidth() + "");
-        heightTextField.setText(currentShape.getHeight() + "");
-        colorTextField.setText(currentShape.getColorCode());
-        objectName.setText(currentShape.getName());
-        gravityCheckbox.setSelected(((RigidBody) currentShape.getComponent(RigidBody.class.getSimpleName())).hasGravity());
-        colliderCheckbox.setSelected(((Collider) currentShape.getComponent(Collider.class.getSimpleName())).isEnabled());
-        tagComboBox.setValue(currentShape.getTag().toString());
+        xTextField.setText(currentShapeSelected.getTopLeft().getX()+ "");
+        yTextField.setText(currentShapeSelected.getTopLeft().getY() + "");
+        widthTextField.setText(currentShapeSelected.getWidth() + "");
+        heightTextField.setText(currentShapeSelected.getHeight() + "");
+        colorTextField.setText(currentShapeSelected.getColorCode());
+        objectName.setText(currentShapeSelected.getName());
+        gravityCheckbox.setSelected(currentShapeSelected.hasComponent(RigidBody.class.getName()));
+        colliderCheckbox.setSelected(currentShapeSelected.hasComponent(BoxCollider.class.getName()));
+        tagComboBox.setValue(currentShapeSelected.getTag().toString());
         toggleButtons(false);
     }
 
@@ -230,41 +233,41 @@ public class LevelEditor {
             }
         });
         objectName.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (currentShape == null) return;
-            currentShape.setName(newValue);
+            if (currentShapeSelected == null) return;
+            currentShapeSelected.setName(newValue);
 
         });
 
         xTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (isStringDouble(newValue)) {
-                if (currentShape == null) return;
-                currentShape.setX(Double.parseDouble(newValue));
+                if (currentShapeSelected == null) return;
+                currentShapeSelected.getTopLeft().setX(Double.parseDouble(newValue));
             }
         });
 
         yTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (currentShape == null) return;
+            if (currentShapeSelected == null) return;
             if (isStringDouble(newValue)) {
-                currentShape.setY(Double.parseDouble(newValue));
+                currentShapeSelected.getTopLeft().setY(Double.parseDouble(newValue));
             }
         });
         widthTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (currentShape == null) return;
+            if (currentShapeSelected == null) return;
             if (isStringDouble(newValue)) {
-                currentShape.setWidth(Double.parseDouble(newValue));
+                currentShapeSelected.setWidth(Double.parseDouble(newValue));
             }
         });
         heightTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (currentShape == null) return;
+            if (currentShapeSelected == null) return;
             if (isStringDouble(newValue)) {
-                currentShape.setHeight(Double.parseDouble(newValue));
+                currentShapeSelected.setHeight(Double.parseDouble(newValue));
             }
         });
         colorTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (currentShape == null) return;
+            if (currentShapeSelected == null) return;
             try {
                 Color color = Color.web(newValue);
-                currentShape.setColorCode(newValue);
+                currentShapeSelected.setColorCode(newValue);
             } catch (Exception e) {
                 System.out.println("Not a color hex code");
             }
@@ -272,13 +275,25 @@ public class LevelEditor {
 
 
         gravityCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                    if (currentShape == null) return;
-                    ((RigidBody) currentShape.getComponent(RigidBody.class.getSimpleName())).setHasGravity(newValue);
+                    if (currentShapeSelected == null) return;
+                    if(newValue){
+                        if(!currentShapeSelected.hasComponent(RigidBody.class.getName())) {
+                            currentShapeSelected.addComponent(new RigidBody(currentShapeSelected));
+                        }
+                    }else{
+                        currentShapeSelected.removeComponent(RigidBody.class.getName());
+                    }
                 }
         );
         colliderCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (currentShape == null) return;
-            ((Collider) currentShape.getComponent(Collider.class.getSimpleName())).setEnabled(newValue);
+            if (currentShapeSelected == null) return;
+            if(newValue){
+                if(!currentShapeSelected.hasComponent(BoxCollider.class.getName())) {
+                    currentShapeSelected.addComponent(new BoxCollider(currentShapeSelected));
+                }
+            }else{
+                currentShapeSelected.removeComponent(BoxCollider.class.getName());
+            }
         });
 
     }
@@ -291,15 +306,15 @@ public class LevelEditor {
             File  file = fileChooser.showOpenDialog(stage);
             if(file!=null){
                 Image image = new Image(file.toURI().toString());
-                ((CustomSquare) currentShape).setImage(image);
+                ((CustomSquare) currentShapeSelected).setImage(image);
             }
 
 
     }
 
     public void deleteCurrentObject(){
-       objectsOnCanvas.remove(currentShape);
-       currentShape = null;
+       objectsOnCanvas.remove(currentShapeSelected);
+       currentShapeSelected = null;
        updateFields();
     }
 
