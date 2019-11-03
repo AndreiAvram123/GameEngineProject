@@ -9,16 +9,16 @@
 
 <VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color:#ACC3DE; " xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.LevelEditor">
    <children>
-      <AnchorPane prefHeight="800.0" prefWidth="1200.0">
+      <AnchorPane prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #F4DCD5;">
 
 
-            <Canvas fx:id="canvas" height="750.0" layoutX="220.0" layoutY="50.0" style="-fx-background-color:#FAFAFA " width="750.0" />
+            <Canvas fx:id="canvas" height="750.0" layoutX="220.0" layoutY="50.0" style="-fx-background-color: #F5F8F6;" width="750.0" />
 
-            <Pane layoutX="990.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #5999E3;">
+            <Pane layoutX="990.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #DAB5AB;">
                <children>
-                  <VBox layoutX="6.0" layoutY="6.0" prefHeight="689.0" prefWidth="189.0">
+                  <VBox layoutX="6.0" layoutY="6.0" prefHeight="689.0" prefWidth="189.0" style="-fx-background-color: #DAB5AB;">
                      <children>
-                        <TextField fx:id="objectName" alignment="CENTER" prefHeight="10.0" prefWidth="10">
+                        <TextField fx:id="objectName" alignment="CENTER"  prefHeight="10.0" prefWidth="10">
                         <VBox.margin>
                            <Insets bottom="20.0" />
                         </VBox.margin></TextField>
@@ -89,6 +89,16 @@
                            <Insets bottom="5.0" />
                         </VBox.margin>
                      </HBox>
+                     <HBox layoutX="10.0" layoutY="195.0" prefHeight="40.0" prefWidth="190.0">
+                        <children>
+                           <Label contentDisplay="CENTER" prefWidth="66.0" text="Image" textAlignment="JUSTIFY">
+                              <font>
+                                 <Font size="20.0" />
+                              </font>
+                           </Label>
+                           <Button fx:id="browseImageButton" mnemonicParsing="false" onMouseClicked="#openImageExplorer" text="Browse image" />
+                        </children>
+                     </HBox>
                               <CheckBox fx:id="playerCheckbox" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;-fx-text-fill: #000000" text="Player" />
                         <HBox prefHeight="200.0" prefWidth="190.0">
                            <children>
@@ -107,17 +117,45 @@
                               </TitledPane>
                            </children>
                         </HBox>
+                        <HBox prefHeight="200" prefWidth="100">
+                        <Label text="Tag">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox fx:id="tagComboBox" onAction="#changeTag" prefHeight="25.0" prefWidth="93.0" style="-fx-start-margin: 10">
+                        <VBox.margin>
+                           <Insets top="10.0" />
+                        </VBox.margin>
+                        </ComboBox>
+                        <VBox.margin>
+                           <Insets top="20.0" />
+                        </VBox.margin>
+                        </HBox>
                         <HBox prefHeight="200.0" prefWidth="190.0" />
-                     <HBox prefHeight="100.0" prefWidth="200.0" />
+
+                     <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                           <Button fx:id="deleteObjectButton" mnemonicParsing="false" onAction="#deleteCurrentObject" prefHeight="30.0" prefWidth="189.0" style="-fx-background-color: E44232; -fx-text-fill: ffffff; -fx-font-weight: bold;" text="REMOVE" />
+                        </children>
+                     </HBox>
 
                      </children>
                   </VBox>
                </children>
             </Pane>
-            <Pane fx:id="objectSelector" layoutX="10.0" layoutY="30.0" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #5999E3">
-             <Rectangle fx:id="squareObject" fill="blue" height="100" width="100" x="40.0" y="40.0" />
+            <Pane fx:id="objectSelector" layoutX="10.0" layoutY="30.0" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #DAB5AB;">
+             <Rectangle fx:id="squareObject" fill="#e9ff42" height="100" layoutY="16.0" width="100" x="40.0" y="40.0" />
+            <Label layoutX="47.0" layoutY="2.0" text="Objects">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </Label>
              </Pane>
-            <Button fx:id="playButton" layoutX="565.0" layoutY="12.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="76.0" text="Play" textFill="RED">
+            <Button fx:id="playButton" layoutX="565.0" layoutY="12.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="76.0" text="Play">
                <font>
                   <Font name="System Bold Italic" size="12.0" />
                </font>

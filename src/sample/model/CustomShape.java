@@ -2,20 +2,21 @@ package sample.model;
 
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
 public abstract class CustomShape extends Node{
 
-    private String name;
     GraphicsContext graphicsContext;
-    double x;
-    double y;
-    double height =100;
-    double width = 100;
-    private ArrayList<Component> components;
-    protected String colorCode;
+    String colorCode= "#e9ff42";
+    String tag = "None";
+    private String name;
+    private double x;
+    private double y;
+    private  double height =100;
+    private double width = 100;
+    private ArrayList<Component> components= new ArrayList<>();;
+
 
     private void addDefaultComponents(){
         addComponent(new RigidBody(this));
@@ -32,9 +33,7 @@ public abstract class CustomShape extends Node{
         this.graphicsContext = graphicsContext;
         this.x = x;
         this.y = y;
-        components = new ArrayList<>();
         addDefaultComponents();
-        colorCode = "#0000ff";
     }
 
     public boolean hasComponent(String className){
@@ -47,10 +46,14 @@ public abstract class CustomShape extends Node{
     }
 
     public void  removeComponent(String className){
+        Component toRemove = null;
         for(Component component : components) {
             if(component.getClass().getSimpleName().equals(className)) {
-                components.remove(component);
+               toRemove = component;
             }
+        }
+        if(toRemove !=null){
+            components.remove(toRemove);
         }
     }
 
@@ -71,6 +74,29 @@ public abstract class CustomShape extends Node{
     public void updateGraphicsContext(GraphicsContext graphicsContext){
         this.graphicsContext = graphicsContext;
     }
+
+
+    public void update(){
+        drawShape();
+        produceComponentsEffect();
+
+    }
+
+    private void produceComponentsEffect() {
+        for(Component component: components){
+            component.causeEffect();
+        }
+    }
+
+    abstract void drawShape();
+
+
+   public void setTag(String tag){
+       this.tag = tag;
+   }
+   public String getTag(){
+       return tag;
+   }
 
     public String getColorCode() {
         return colorCode;
@@ -126,19 +152,5 @@ public abstract class CustomShape extends Node{
         this.y = y;
     }
 
-
-    public void update(){
-          drawShape();
-          produceComponentsEffect();
-
-    }
-
-    private void produceComponentsEffect() {
-        for(Component component: components){
-            component.causeEffect();
-        }
-    }
-
-    abstract void drawShape();
 
 }

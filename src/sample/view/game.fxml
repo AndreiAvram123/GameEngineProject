@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.canvas.Canvas?>
-<VBox fx:controller="sample.controller.Game"  style="-fx-background-color:#ACC3DE; "  maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="750.0" style="-fx-background-color:#ACC3DE; " xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.Game">
 
-<Canvas   width="1200" height="800"
-            fx:id="canvas"
-    />
-
+<AnchorPane prefHeight="750" prefWidth="750" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" >
+   <children>
+      <Canvas height="750"  width="750" fx:id="gameCanvas" />
+   </children>
+</AnchorPane>
 </VBox>
-

@@ -12,77 +12,57 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sample.model.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class LevelEditor {
-    @FXML
-    private Button playButton;
-    @FXML
-    private Rectangle squareObject;
-    @FXML
-    private TextField objectName;
-    @FXML
-    private Canvas canvas;
-    @FXML
-    private
-    TextField xTextField;
-    @FXML
-    private
-    TextField yTextField;
-    @FXML
-    private
-    TextField widthTextField;
-    @FXML
-    private
-    TextField heightTextField;
-    @FXML
-    TextField colorTextField;
-    @FXML
-    CheckBox gravityCheckbox;
-    @FXML
-    CheckBox colliderCheckbox;
-    @FXML
-    CheckBox playerCheckbox;
-
+    @FXML private Button playButton;
+    @FXML private Rectangle squareObject;
+    @FXML private TextField objectName;
+    @FXML private Canvas canvas;
+    @FXML private TextField xTextField;
+    @FXML private TextField yTextField;
+    @FXML private TextField widthTextField;
+    @FXML private TextField heightTextField;
+    @FXML TextField colorTextField;
+    @FXML CheckBox gravityCheckbox;
+    @FXML CheckBox colliderCheckbox;
+    @FXML CheckBox playerCheckbox;
+    @FXML Button browseImageButton;
+    @FXML Button deleteObjectButton;
+    @FXML ComboBox tagComboBox;
 
     private Shape currentShapeSelected;
     private GraphicsContext graphicsContext;
     // private CollisionDetection collisionDetection;
-    private ArrayList<CustomShape> objectsOnCanvas;
+    private ArrayList<CustomShape> objectsOnCanvas = new ArrayList<>();
     private CustomShape currentShape;
     private boolean playerExists = false;
     private static double offsetCanvasX;
     private static double offsetCanvasY;
+    private Stage stage;
 
-    public void startEditor() {
-        offsetCanvasX = canvas.getLayoutX();
-        offsetCanvasY = canvas.getLayoutY();
+    public void startEditor(Stage stage) {
+        this.stage = stage;
+        getCanvasOffset();
         graphicsContext = canvas.getGraphicsContext2D();
-        objectsOnCanvas = new ArrayList<>();
         initializeInspector();
-        initializeObjectSelector();
         updateCanvas();
-        attachListenerToPlayButton();
+
     }
 
-    private void attachListenerToPlayButton() {
-        playButton.setOnAction(event -> {
-            try {
-                startGameScene(event);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        });
-
+    private void getCanvasOffset() {
+        offsetCanvasX = canvas.getLayoutX();
+        offsetCanvasY = canvas.getLayoutY();
     }
 
     private void startGameScene(ActionEvent event) throws IOException {
@@ -91,10 +71,12 @@ public class LevelEditor {
         Stage stage = new Stage();
         stage.setTitle("Andrei's game engine");
         stage.setResizable(false);
-        stage.setScene(new Scene(root, 1200, 800));
+        stage.setScene(new Scene(root, 750, 750));
         stage.show();
-        ((Game) fxmlLoader.getController()).addElementsOnScreen(objectsOnCanvas);
+        ((Game) fxmlLoader.getController()).startGame(objectsOnCanvas);
         ((Node) event.getSource()).getScene().getWindow().hide();
+
+
     }
 
     ArrayList<CustomShape> getObjectsOnCanvas() {
@@ -106,7 +88,7 @@ public class LevelEditor {
         setListenerOnObjectSelected(squareObject);
         setListenerOnMouseDragged();
         setActionOnMouseReleased();
-        addListenerToCanvas();
+
 
     }
 
@@ -132,15 +114,7 @@ public class LevelEditor {
         });
     }
 
-    private void addListenerToCanvas() {
-        canvas.setOnMouseDragged(event -> {
-           for(CustomShape customShape: objectsOnCanvas){
-              if(customShape.isShapeWithinRange(event.getX(),event.getY())){
-                 customShape.setNewCenter(event.getX(),event.getY());
-              }
-           }
-        });
-    }
+
 
     private boolean isObjectWithinCanvas(double x, double y) {
         return x > offsetCanvasX && y < offsetCanvasY + canvas.getHeight()
@@ -175,8 +149,26 @@ public class LevelEditor {
         Inspector inspector = new Inspector(canvas, this);
         inspector.start();
         attachListenerToFields();
+        toggleButtons(true);
+        initializeObjectSelector();
+        addItemsToComboBox();
+
     }
 
+    private void addItemsToComboBox() {
+       tagComboBox.getItems().add("None");
+       tagComboBox.getItems().add("Collectable");
+       tagComboBox.getItems().add("Enemy");
+       tagComboBox.getItems().add("Checkpoint");
+       tagComboBox.setValue("None");
+
+    }
+
+    public void changeTag(){
+        if(currentShape!=null){
+            currentShape.setTag(tagComboBox.getValue().toString());
+        }
+    }
 
     private void updateGraphicsContextBackground() {
         graphicsContext.setFill(Color.LIGHTCYAN);
@@ -190,20 +182,53 @@ public class LevelEditor {
 
     private void updateFields() {
         if (currentShape != null) {
-            xTextField.setText(currentShape.getX() + "");
-            yTextField.setText(currentShape.getY() + "");
-            widthTextField.setText(currentShape.getWidth() + "");
-            heightTextField.setText(currentShape.getHeight() + "");
-            colorTextField.setText(currentShape.getColorCode());
-            objectName.setText(currentShape.getName());
-            gravityCheckbox.setSelected(((RigidBody) currentShape.getComponent(RigidBody.class.getSimpleName())).hasGravity());
-            colliderCheckbox.setSelected(((Collider) currentShape.getComponent(Collider.class.getSimpleName())).isEnabled());
-            playerCheckbox.setSelected(currentShape.hasComponent(Player.class.getSimpleName()));
+            getShapeValues();
+        }else{
+            emptyFields();
         }
     }
 
-    private void attachListenerToFields() {
+    private void emptyFields()  {
+        xTextField.setText("");
+        yTextField.setText("");
+        widthTextField.setText("");
+        heightTextField.setText("");
+        colorTextField.setText("");
+        objectName.setText("");
+        gravityCheckbox.setSelected(false);
+        colliderCheckbox.setSelected(false);
+        playerCheckbox.setSelected(false);
+        tagComboBox.setValue("None");
+        toggleButtons(true);
+    }
 
+    private void getShapeValues() {
+        xTextField.setText(currentShape.getX() + "");
+        yTextField.setText(currentShape.getY() + "");
+        widthTextField.setText(currentShape.getWidth() + "");
+        heightTextField.setText(currentShape.getHeight() + "");
+        colorTextField.setText(currentShape.getColorCode());
+        objectName.setText(currentShape.getName());
+        gravityCheckbox.setSelected(((RigidBody) currentShape.getComponent(RigidBody.class.getSimpleName())).hasGravity());
+        colliderCheckbox.setSelected(((Collider) currentShape.getComponent(Collider.class.getSimpleName())).isEnabled());
+        playerCheckbox.setSelected(currentShape.hasComponent(Player.class.getSimpleName()));
+        tagComboBox.setValue(currentShape.getTag());
+        toggleButtons(false);
+    }
+
+    private void toggleButtons(boolean b) {
+        browseImageButton.setDisable(b);
+        deleteObjectButton.setDisable(b);
+    }
+
+    private void attachListenerToFields() {
+        playButton.setOnAction(event -> {
+            try {
+                startGameScene(event);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         objectName.textProperty().addListener((observable, oldValue, newValue) -> {
             if (currentShape == null) return;
             currentShape.setName(newValue);
@@ -268,6 +293,27 @@ public class LevelEditor {
                 }
             }
         });
+
+    }
+
+    public void openImageExplorer() {
+            FileChooser fileChooser = new FileChooser();
+            FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter("jpg files", "*.jpg");
+            fileChooser.getExtensionFilters().add(extensionFilter);
+            fileChooser.setTitle("Select an image");
+            File  file = fileChooser.showOpenDialog(stage);
+            if(file!=null){
+                Image image = new Image(file.toURI().toString());
+                ((CustomSquare) currentShape).setImage(image);
+            }
+
+
+    }
+
+    public void deleteCurrentObject(){
+       objectsOnCanvas.remove(currentShape);
+       currentShape = null;
+       updateFields();
     }
 
     private boolean isStringDouble(String string) {

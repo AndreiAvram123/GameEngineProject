@@ -17,7 +17,9 @@ public class Inspector {
     }
     public void start(){
         setListener();
+        addListenerToCanvas();
     }
+
     private void setListener(){
         canvas.setOnMouseClicked(event -> {
             CustomShape objectClicked = getObjectClicked(event.getSceneX() -225,
@@ -27,7 +29,15 @@ public class Inspector {
 
     }
 
-
+    private void addListenerToCanvas() {
+        canvas.setOnMouseDragged(event -> {
+            for(CustomShape customShape: objectsOnCanvas){
+                if(customShape.isShapeWithinRange(event.getX(),event.getY())){
+                    customShape.setNewCenter(event.getX(),event.getY());
+                }
+            }
+        });
+    }
     public CustomShape getObjectClicked(double x, double y) {
         for(CustomShape shape: objectsOnCanvas){
             if(shape.isShapeWithinRange(x,y)){
