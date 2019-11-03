@@ -1,18 +1,16 @@
 package sample.model;
-
-import javafx.scene.canvas.GraphicsContext;
 import sample.interfaces.Movable;
 
-public class  Player extends Component implements Movable {
+public class  Player  implements Movable {
      private int speedX;
      private int speedY;
+     private  CustomShape customShape;
 
      public Player(CustomShape customShape){
-         super(customShape);
+         this.customShape = customShape;
          speedX =10;
          speedY =10;
        }
-
 
     @Override
     public void moveRight() {
@@ -35,8 +33,4 @@ public class  Player extends Component implements Movable {
     }
 
 
-    @Override
-    public void causeEffect() {
-
-    }
 }

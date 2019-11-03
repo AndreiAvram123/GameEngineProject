@@ -9,10 +9,9 @@ public abstract class CustomShape extends Node{
 
     GraphicsContext graphicsContext;
     String colorCode= "#e9ff42";
-    String tag = "None";
+    TAGS tag = TAGS.NONE;
     private String name;
-    private double x;
-    private double y;
+    private Point point;
     private  double height =100;
     private double width = 100;
     private ArrayList<Component> components= new ArrayList<>();;
@@ -23,16 +22,15 @@ public abstract class CustomShape extends Node{
         addComponent(new Collider(this));
     }
     public void setNewCenter(double x, double y){
-        this.x = x - width/2;
-        this.y = y - height/2;
+        point.setX(x - width/2);
+        point.setY(y - height/2);
     }
 
 
     public CustomShape(GraphicsContext graphicsContext,String name,double x,double y){
         this.name = name;
         this.graphicsContext = graphicsContext;
-        this.x = x;
-        this.y = y;
+        point = new Point(x,y);
         addDefaultComponents();
     }
 
@@ -90,11 +88,25 @@ public abstract class CustomShape extends Node{
 
     abstract void drawShape();
 
+    public void setX(double x){
+        point.setX(x);
+    }
 
-   public void setTag(String tag){
+    public void setY(double y){
+        point.setY(y);
+    }
+    public double getY(){
+        return point.getY();
+    }
+    public double getX(){
+        return point.getX();
+    }
+
+
+   public void setTag(TAGS tag){
        this.tag = tag;
    }
-   public String getTag(){
+   public TAGS getTag(){
        return tag;
    }
 
@@ -107,8 +119,8 @@ public abstract class CustomShape extends Node{
     }
 
     public boolean isShapeWithinRange(double x, double y) {
-            return (getX() <= x && getY() <= y)
-                    && (getHeight() + getY() >= y && getWidth() + getX() >= x);
+            return (point.getX() <= x && point.getY() <= y)
+                    && (getHeight() + point.getY() >= y && getWidth() + point.getX() >= x);
 
     }
 
@@ -135,22 +147,5 @@ public abstract class CustomShape extends Node{
     public void setName(String name){
         this.name = name;
     }
-
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
 
 }

@@ -8,10 +8,12 @@ import javafx.scene.paint.Color;
 import sample.PlayerInput;
 import sample.model.CustomShape;
 import sample.model.Player;
+import sample.model.TAGS;
 
 import java.util.ArrayList;
 
 public class Game{
+
 @FXML
 Canvas gameCanvas;
 
@@ -36,10 +38,12 @@ Canvas gameCanvas;
         };
         animationTimer.start();
     }
+
     private void updateGraphicsContextBackground() {
         graphicsContext.setFill(Color.LIGHTCYAN);
         graphicsContext.fillRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
     }
+
     private void updateObjectsCanvas(ArrayList<CustomShape> objectsOnCanvas) {
         for(CustomShape customShape : objectsOnCanvas){
             customShape.updateGraphicsContext(gameCanvas.getGraphicsContext2D());
@@ -47,13 +51,14 @@ Canvas gameCanvas;
     }
 
     private void getPlayer() {
-        for(CustomShape customShape : objectsOnCanvas){
-            if(customShape.hasComponent(Player.class.getSimpleName())){
-                player = (Player)customShape.getComponent(Player.class.getSimpleName());
-                playerInput = new PlayerInput(gameCanvas.getScene(),player);
+        for(CustomShape customShape : objectsOnCanvas) {
+            if (customShape.getTag() == TAGS.PLAYER){
+                player = new Player(customShape);
+                playerInput = new PlayerInput(gameCanvas.getScene(), player);
                 playerInput.start();
             }
         }
+
 
     }
 

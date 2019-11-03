@@ -18,7 +18,7 @@
                <children>
                   <VBox layoutX="6.0" layoutY="6.0" prefHeight="689.0" prefWidth="189.0" style="-fx-background-color: #DAB5AB;">
                      <children>
-                        <TextField fx:id="objectName" alignment="CENTER"  prefHeight="10.0" prefWidth="10">
+                        <TextField fx:id="objectName" alignment="CENTER" prefHeight="10.0" prefWidth="10">
                         <VBox.margin>
                            <Insets bottom="20.0" />
                         </VBox.margin></TextField>
@@ -99,7 +99,6 @@
                            <Button fx:id="browseImageButton" mnemonicParsing="false" onMouseClicked="#openImageExplorer" text="Browse image" />
                         </children>
                      </HBox>
-                              <CheckBox fx:id="playerCheckbox" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="185.0" style="-fx-padding: 5;-fx-text-fill: #000000" text="Player" />
                         <HBox prefHeight="200.0" prefWidth="190.0">
                            <children>
                               <TitledPane animated="false" prefHeight="161.0" prefWidth="190.0" text="RigidBody">

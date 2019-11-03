@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class LevelEditor {
+
     @FXML private Button playButton;
     @FXML private Rectangle squareObject;
     @FXML private TextField objectName;
@@ -36,33 +37,34 @@ public class LevelEditor {
     @FXML TextField colorTextField;
     @FXML CheckBox gravityCheckbox;
     @FXML CheckBox colliderCheckbox;
-    @FXML CheckBox playerCheckbox;
     @FXML Button browseImageButton;
     @FXML Button deleteObjectButton;
     @FXML ComboBox tagComboBox;
 
     private Shape currentShapeSelected;
     private GraphicsContext graphicsContext;
-    // private CollisionDetection collisionDetection;
     private ArrayList<CustomShape> objectsOnCanvas = new ArrayList<>();
     private CustomShape currentShape;
     private boolean playerExists = false;
-    private static double offsetCanvasX;
-    private static double offsetCanvasY;
+    private Point canvasInitialPoint;
+    private Point squareInitialPoint;
     private Stage stage;
 
     public void startEditor(Stage stage) {
         this.stage = stage;
-        getCanvasOffset();
+        getCanvasInitialPoint();
+        getSquareInitialPoint();
         graphicsContext = canvas.getGraphicsContext2D();
         initializeInspector();
-        updateCanvas();
+        update();
 
     }
 
-    private void getCanvasOffset() {
-        offsetCanvasX = canvas.getLayoutX();
-        offsetCanvasY = canvas.getLayoutY();
+    private void getCanvasInitialPoint() {
+        canvasInitialPoint = new Point(canvas.getLayoutX(),canvas.getLayoutY());
+    }
+    private void getSquareInitialPoint(){
+        squareInitialPoint = new Point(squareObject.getX(),squareObject.getY());
     }
 
     private void startGameScene(ActionEvent event) throws IOException {
@@ -80,12 +82,12 @@ public class LevelEditor {
     }
 
     ArrayList<CustomShape> getObjectsOnCanvas() {
-        return objectsOnCanvas;
+         return objectsOnCanvas;
+
     }
 
 
     private void initializeObjectSelector() {
-        setListenerOnObjectSelected(squareObject);
         setListenerOnMouseDragged();
         setActionOnMouseReleased();
 
@@ -104,35 +106,22 @@ public class LevelEditor {
         squareObject.setOnMouseReleased(event -> {
             if (isObjectWithinCanvas(event.getSceneX(), event.getSceneY())) {
                 CustomSquare customSquare = new CustomSquare(graphicsContext, "Square", 0,0);
-                customSquare.setNewCenter( event.getSceneX() - offsetCanvasX,event.getSceneY() - offsetCanvasY);
+                customSquare.setNewCenter( event.getSceneX() - canvasInitialPoint.getX(),event.getSceneY() - canvasInitialPoint.getY());
                 objectsOnCanvas.add(customSquare);
             }
             //return to default position
-            squareObject.setX(20);
-            squareObject.setY(20);
+            squareObject.setX(squareInitialPoint.getX());
+            squareObject.setY(squareInitialPoint.getY());
 
         });
     }
-
-
 
     private boolean isObjectWithinCanvas(double x, double y) {
-        return x > offsetCanvasX && y < offsetCanvasY + canvas.getHeight()
-                && x < offsetCanvasX + canvas.getWidth();
+        return x > canvasInitialPoint.getX() && y < canvasInitialPoint.getY() + canvas.getHeight()
+                && x < canvasInitialPoint.getX() + canvas.getWidth();
     }
 
-    private void setListenerOnObjectSelected(Shape shape) {
-        shape.setOnMouseClicked(event -> {
-            if (currentShapeSelected != null) {
-                currentShapeSelected.setStrokeWidth(0);
-            }
-            currentShapeSelected = shape;
-            currentShapeSelected.setStrokeWidth(2.0);
-            shape.setStroke(Color.YELLOW);
-        });
-    }
-
-    private void updateCanvas() {
+    private void update() {
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -156,17 +145,30 @@ public class LevelEditor {
     }
 
     private void addItemsToComboBox() {
-       tagComboBox.getItems().add("None");
-       tagComboBox.getItems().add("Collectable");
-       tagComboBox.getItems().add("Enemy");
-       tagComboBox.getItems().add("Checkpoint");
-       tagComboBox.setValue("None");
+       tagComboBox.getItems().addAll(TAGS.NONE.getName(),
+               TAGS.PLAYER.getName(),
+               TAGS.COLLECTABLE.getName(),
+               TAGS.ENEMY.getName(),
+               TAGS.CHECKPOINT.getName());
 
+        tagComboBox.setValue(TAGS.NONE.getName());
     }
 
     public void changeTag(){
         if(currentShape!=null){
-            currentShape.setTag(tagComboBox.getValue().toString());
+            if(TAGS.getObjectByName(tagComboBox.getValue().toString())== TAGS.PLAYER){
+                setPlayerTag();
+            }else{
+                currentShape.setTag(TAGS.getObjectByName(tagComboBox.getValue().toString()));
+            }
+            tagComboBox.setValue(currentShape.getTag().getName());
+        }
+    }
+
+    private void setPlayerTag() {
+        if(!playerExists){
+            currentShape.setTag(TAGS.PLAYER);
+            playerExists = true;
         }
     }
 
@@ -197,8 +199,7 @@ public class LevelEditor {
         objectName.setText("");
         gravityCheckbox.setSelected(false);
         colliderCheckbox.setSelected(false);
-        playerCheckbox.setSelected(false);
-        tagComboBox.setValue("None");
+        tagComboBox.setValue(TAGS.NONE.getName());
         toggleButtons(true);
     }
 
@@ -211,8 +212,7 @@ public class LevelEditor {
         objectName.setText(currentShape.getName());
         gravityCheckbox.setSelected(((RigidBody) currentShape.getComponent(RigidBody.class.getSimpleName())).hasGravity());
         colliderCheckbox.setSelected(((Collider) currentShape.getComponent(Collider.class.getSimpleName())).isEnabled());
-        playerCheckbox.setSelected(currentShape.hasComponent(Player.class.getSimpleName()));
-        tagComboBox.setValue(currentShape.getTag());
+        tagComboBox.setValue(currentShape.getTag().toString());
         toggleButtons(false);
     }
 
@@ -279,19 +279,6 @@ public class LevelEditor {
         colliderCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (currentShape == null) return;
             ((Collider) currentShape.getComponent(Collider.class.getSimpleName())).setEnabled(newValue);
-        });
-
-        playerCheckbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (currentShape == null) return;
-            if (newValue && !playerExists) {
-                currentShape.addComponent(new Player(currentShape));
-            } else {
-                if (!newValue && !playerExists) {
-                    currentShape.removeComponent(Player.class.getSimpleName());
-                } else {
-                    System.out.println("Mate you already have a player");
-                }
-            }
         });
 
     }

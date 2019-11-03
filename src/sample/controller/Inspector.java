@@ -6,6 +6,7 @@ import sample.model.CustomShape;
 import java.util.ArrayList;
 
 public class Inspector {
+
     private LevelEditor levelEditor;
     private Canvas canvas;
     private ArrayList<CustomShape> objectsOnCanvas;
