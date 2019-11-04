@@ -3,6 +3,7 @@ package sample.database;
 import com.google.gson.Gson;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sample.model.DataShape;
 import sample.model.shapes.CustomShape;
 import sample.model.shapes.CustomSquare;
 
@@ -19,7 +20,7 @@ public class DataManager {
     }
 
     public void saveObjects(ArrayList<CustomSquare> objectsOnScreen) {
-        File file = openSaveFileDialog();
+        File file = openSaveFileDialog("Text files","*.txt");
         PrintWriter printWriter = null;
         try {
             printWriter = new PrintWriter(file);
@@ -36,24 +37,23 @@ public class DataManager {
         System.out.println("Saving successful :)");
     }
 
-    private File  openSaveFileDialog(){
+    private File  openSaveFileDialog(String fileDescription,String fileExtension){
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter("Text files", "*.txt");
+        FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter(fileDescription,fileExtension);
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setTitle("Select a folder");
         return fileChooser.showSaveDialog(stage);
-
     }
-    public File getFileFromOpenDialog(){
+    public File getFileFromOpenDialog(String fileDescription,String fileExtension){
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter("jpg files", "*.jpg");
+        FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter(fileDescription,fileExtension);
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setTitle("Select an image");
         return fileChooser.showOpenDialog(stage);
     }
-    public ArrayList<CustomShape> getSaveData() {
-        File savedFile = getFileFromOpenDialog();
-        ArrayList<CustomShape> objectsOnScreen = new ArrayList<>();
+    public ArrayList<DataShape> getSaveData() {
+        File savedFile = getFileFromOpenDialog(  "Text", "*.txt");
+        ArrayList<DataShape> dataShapes = new ArrayList<>();
         Gson gson = new Gson();
         if (savedFile != null) {
             try {
@@ -61,17 +61,15 @@ public class DataManager {
                 while (scanner.hasNextLine()) {
                     //check the class type
                     String line = scanner.nextLine();
-                    if (line.contains(CustomSquare.class.getName())) {
-                        CustomSquare customSquare = gson.fromJson(line, CustomSquare.class);
-                        objectsOnScreen.add(customSquare);
-                        System.out.println(line);
-                    }
+                       DataShape dataShape = gson.fromJson(line, DataShape.class);
+                       dataShapes.add(dataShape);
+
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
 
         }
-        return objectsOnScreen;
+        return dataShapes;
     }
 }

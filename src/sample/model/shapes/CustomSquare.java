@@ -31,6 +31,11 @@ public class CustomSquare extends CustomShape implements JsonSerializable {
         topLeft = new Point(x,y);
         getPoints();
     }
+    public CustomSquare(GraphicsContext graphicsContext, String name, double x, double y,double width,double height) {
+        super(graphicsContext, name,width,height);
+        topLeft = new Point(x,y);
+        getPoints();
+    }
 
 
     private void getPoints() {
@@ -123,8 +128,8 @@ public class CustomSquare extends CustomShape implements JsonSerializable {
     @Override
     public String toJsonObject() {
          Gson gson = new Gson();
-          return gson.toJson(new DataShape(CustomSquare.class.getName(),topLeft.getX(),
-                topLeft.getY(),getHeight(),getWidth(),getColorCode()));
+          return gson.toJson(new DataShape(CustomSquare.class.getName(),getName(),topLeft.getX(),
+                topLeft.getY(),getHeight(),getWidth(),getColorCode(),getTag().getName()));
 
      }
 }

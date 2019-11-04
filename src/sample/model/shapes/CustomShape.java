@@ -26,6 +26,12 @@ public abstract class CustomShape extends Node {
         this.name = name;
         this.graphicsContext = graphicsContext;
     }
+    public CustomShape(GraphicsContext graphicsContext, String name,double width,double height) {
+        this.name = name;
+        this.graphicsContext = graphicsContext;
+        this.width = width;
+        this.height =height;
+    }
 
     public void addComponent(Component component) {
         componentsEnabled.add(component);

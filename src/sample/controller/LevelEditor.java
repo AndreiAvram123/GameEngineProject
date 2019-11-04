@@ -314,7 +314,7 @@ public class LevelEditor {
     }
 
     public void openImageExplorer() {
-           File file = dataManager.getFileFromOpenDialog();
+           File file = dataManager.getFileFromOpenDialog("jpg files", "*.jpg");
             if(file!=null){
                 Image image = new Image(file.toURI().toString());
                 currentShapeSelected.setImage(image);
@@ -347,8 +347,18 @@ public class LevelEditor {
     }
     @FXML
     private void loadSaveFile(){
-        dataManager.getSaveData();
+        ArrayList<DataShape>dataShapes = dataManager.getSaveData();
+         objectsOnCanvas.clear();
+       for(DataShape dataShape :dataShapes){
+           if(dataShape.getClassName().equals(CustomSquare.class.getName())){
+               CustomSquare customSquare = new CustomSquare(graphicsContext,dataShape.getName()
+               ,dataShape.getX(),dataShape.getY());
+               customSquare.setTag(TAGS.getObjectByName(dataShape.getTagName()));
+               objectsOnCanvas.add(customSquare);
+            }
+       }
     }
+
 
 
 }
