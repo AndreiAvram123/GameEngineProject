@@ -148,18 +148,38 @@
                </children>
             </Pane>
             <Pane fx:id="objectSelector" layoutX="10.0" layoutY="30.0" prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #DAB5AB;">
-             <Rectangle fx:id="squareObject" fill="#e9ff42" height="100" layoutY="16.0" width="100" x="40.0" y="40.0" />
+             <Rectangle fx:id="squareObject" fill="#e9ff42" height="50.0" layoutX="25.0" layoutY="15.0" width="50.0" x="40.0" y="40.0" />
             <Label layoutX="47.0" layoutY="2.0" text="Objects">
                <font>
                   <Font size="26.0" />
                </font>
             </Label>
              </Pane>
-            <Button fx:id="playButton" layoutX="565.0" layoutY="12.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="76.0" text="Play">
+            <Button fx:id="playButton" layoutX="557.0" layoutY="12.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="76.0" text="Play">
                <font>
                   <Font name="System Bold Italic" size="12.0" />
                </font>
             </Button>
+         <MenuBar layoutX="10.0" layoutY="2.0">
+           <menus>
+             <Menu mnemonicParsing="false" text="File">
+               <items>
+                 <MenuItem mnemonicParsing="false" text="Save" onAction="#saveLevel"/>
+                     <MenuItem mnemonicParsing="false" text="Open" onAction="#loadSaveFile" />
+               </items>
+             </Menu>
+             <Menu mnemonicParsing="false" text="Edit">
+               <items>
+                 <MenuItem mnemonicParsing="false" text="Delete" />
+               </items>
+             </Menu>
+             <Menu mnemonicParsing="false" text="Help">
+               <items>
+                 <MenuItem mnemonicParsing="false" text="About" />
+               </items>
+             </Menu>
+           </menus>
+         </MenuBar>
          </AnchorPane>
    </children>
 </VBox>

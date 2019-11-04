@@ -6,16 +6,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import sample.PlayerInput;
-import sample.model.physics.BoxCollider;
-import sample.model.physics.PhysicsEngine;
-import sample.model.shapes.CustomShape;
 import sample.model.Player;
 import sample.model.enums.TAGS;
+import sample.model.physics.PhysicsEngine;
+import sample.model.shapes.CustomShape;
 import sample.model.shapes.CustomSquare;
 
-import javax.swing.*;
 import java.util.ArrayList;
-
 public class Game{
 
 @FXML
@@ -34,6 +31,10 @@ Canvas gameCanvas;
         graphicsContext = gameCanvas.getGraphicsContext2D();
         updateObjectsCanvas(objectsOnCanvas);
         getPlayer();
+        startGameLoop(objectsOnCanvas);
+    }
+
+    private void startGameLoop(ArrayList<CustomSquare> objectsOnCanvas) {
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -46,7 +47,6 @@ Canvas gameCanvas;
         };
         animationTimer.start();
     }
-
 
 
     private void updateGraphicsContextBackground() {

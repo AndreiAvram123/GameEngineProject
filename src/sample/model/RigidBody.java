@@ -4,7 +4,7 @@ import sample.model.shapes.CustomSquare;
 
 public class RigidBody extends Component {
 
-   private double gravityForce =9.81;
+   private double gravityForce =0.4;
    private double mass = 1.0;
 
 

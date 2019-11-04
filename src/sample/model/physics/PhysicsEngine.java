@@ -35,6 +35,7 @@ public class PhysicsEngine {
        if(colliders.size()>1) {
            for (int i = 0; i < colliders.size() - 1; i++) {
                SIDES side = colliders.get(i).getCollisionSide(colliders.get(i+1));
+               System.out.println(side);
                if(side!= SIDES.NONE){
                   processCollision(colliders.get(i),colliders.get(i+1));     
                }

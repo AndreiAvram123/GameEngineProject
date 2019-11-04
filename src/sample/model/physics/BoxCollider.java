@@ -1,5 +1,6 @@
 package sample.model.physics;
 
+import org.jetbrains.annotations.NotNull;
 import sample.model.Component;
 import sample.model.Point;
 import sample.model.enums.SIDES;
@@ -7,9 +8,6 @@ import sample.model.shapes.CustomSquare;
 
 public class BoxCollider extends Component {
 
-
-//todo
-    //add offset to modify collder
     public BoxCollider(CustomSquare customSquare) {
         super(customSquare);
 
@@ -20,40 +18,78 @@ public class BoxCollider extends Component {
 
 
     public SIDES getCollisionSide(BoxCollider boxCollider){
-         //if it is touching above then the hit side side is bottom
+          //right
+        //left
+         //above
+        //below
+        // if(speedX != 0) left and right
+         // if (speedY !=0) top and bottom
 
-        if(isTouchingAbove(boxCollider)){
-            return SIDES.BOTTOM;
-        }
-        if(isTouchingBelow(boxCollider)){
-            return SIDES.TOP;
+        if(isTouchingLeft(boxCollider)){
+            return SIDES.LEFT;
         }
         if(isTouchingRight(boxCollider)){
-            return SIDES.LEFT;
-
-        }
-        if(isTouchingLeft(boxCollider)){
             return SIDES.RIGHT;
         }
+        if(isTouchingBelow(boxCollider)){
+            return SIDES.BOTTOM;
+        }
+
+        if(isTouchingAbove(boxCollider)){
+            return SIDES.TOP;
+        }
+
+
+
         return SIDES.NONE;
     }
 
-    public boolean isTouchingAbove(BoxCollider boxCollider){
-        return getBottonRight().getX()> boxCollider.getTopLeft().getX() &&
-                getBottonRight().getX() < boxCollider.getTopRight().getX()
-                && getTopLeft().getY() <=boxCollider.getBottonRight().getY();
+    private boolean isTouchingAbove(@NotNull BoxCollider boxCollider){
+        return ((getBottonRight().getY()>=boxCollider.getTopLeft().getY()
+                  &&getBottonRight().getY()<=boxCollider.getBottomLeft().getY())
+                  &&((getBottomLeft().getX()>=boxCollider.getTopLeft().getX()
+                      &&getBottomLeft().getX()<=boxCollider.getTopRight().getX())
+                ||(getBottomLeft().getX()>=boxCollider.getTopLeft().getX()&&
+                   getBottomLeft().getX()<=boxCollider.getTopRight().getX())));
     }
-    public boolean isTouchingBelow(BoxCollider boxCollider){
-        return  boxCollider.getBottomLeft().getY() >= getTopRight().getY()
-                && boxCollider.getBottomLeft().getY() <getBottomLeft().getY();
+    //done
+    private boolean isTouchingBelow(@NotNull BoxCollider boxCollider){
+        return (getTopLeft().getY()<=boxCollider.getBottonRight().getY()
+                &&
+                getTopLeft().getY() >=boxCollider.getTopRight().getY()
+
+        )
+        && ((boxCollider.getBottonRight().getX() > getTopLeft().getX()
+        && boxCollider.getBottonRight().getX() < getTopRight().getX())
+        || (boxCollider.getBottomLeft().getX() > getTopLeft().getX()
+        &&boxCollider.getBottomLeft().getX() < getTopRight().getX()));
+
+
     }
-    public boolean isTouchingRight(BoxCollider boxCollider){
-        return boxCollider.getTopRight().getX() >= getBottomLeft().getX()
-                && boxCollider.getTopRight().getX() <getTopRight().getX();
+    //done
+    private boolean isTouchingRight(@NotNull BoxCollider boxCollider){
+        return ((getTopLeft().getX()>=boxCollider.getTopLeft().getX()
+                &&
+                getTopLeft().getX()<= boxCollider.getTopRight().getX())
+                &&
+                ((getBottomLeft().getY()>=boxCollider.getTopRight().getY()
+                   && getBottomLeft().getY() <=boxCollider.getBottonRight().getY())
+                   ||
+                        (getTopLeft().getY()>=boxCollider.getTopRight().getY()
+                          &&getTopLeft().getY()<=boxCollider.getBottonRight().getY()
+                         )
+               ));
+
     }
-    public boolean isTouchingLeft(BoxCollider boxCollider){
-        return boxCollider.getBottomLeft().getX() <= getTopRight().getX()
-                && boxCollider.getBottomLeft().getX() > getBottomLeft().getX();
+    //done
+    private boolean isTouchingLeft(@NotNull BoxCollider boxCollider){
+         return (((getTopRight().getY() >= boxCollider.getTopLeft().getY()
+                && getTopRight().getY() <=boxCollider.getBottomLeft().getY())
+                 ||(getBottonRight().getY()>=boxCollider.getTopLeft().getY()
+                 && getBottonRight().getY()<=boxCollider.getBottomLeft().getY()))
+
+         && (getTopRight().getX()>=boxCollider.getTopLeft().getX())
+             &&getTopRight().getX()<=boxCollider.getTopRight().getX());
     }
 
 

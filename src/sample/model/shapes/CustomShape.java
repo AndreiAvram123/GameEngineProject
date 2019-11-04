@@ -13,10 +13,13 @@ public abstract class CustomShape extends Node {
     String colorCode = "#e9ff42";
     TAGS tag = TAGS.NONE;
     private String name;
-    private double height = 100;
-    private double width = 100;
+    private double height = 50;
+    private double width = 50;
     private ArrayList<Component> componentsEnabled = new ArrayList<>();
     private boolean isInEditor = true;
+     boolean selectedInEditor = false;
+     protected int lastSpeedX = 0;
+     protected int lastSpeedY =0;
 
 
     public CustomShape(GraphicsContext graphicsContext, String name) {
@@ -108,7 +111,11 @@ public abstract class CustomShape extends Node {
             return width;
         }
 
-        public void setHeight ( double height){
+    public void setSelectedInEditor(boolean selectedInEditor) {
+        this.selectedInEditor = selectedInEditor;
+    }
+
+    public void setHeight (double height){
             this.height = height;
         }
 
@@ -124,4 +131,23 @@ public abstract class CustomShape extends Node {
             this.name = name;
         }
 
+    public int getLastSpeedX() {
+        return lastSpeedX;
     }
+
+    public int getLastSpeedY() {
+        return lastSpeedY;
+    }
+
+    public void setIsMovingOnX(int speed){
+           lastSpeedX = speed;
+           lastSpeedY =0;
+    }
+    public void setIsMovingOnY(int speed){
+        lastSpeedY = speed;
+        lastSpeedX =0;
+    }
+
+
+
+}

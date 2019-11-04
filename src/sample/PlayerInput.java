@@ -1,7 +1,6 @@
 package sample;
 
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import sample.interfaces.Movable;
 
 

@@ -1,5 +1,6 @@
 package sample.controller;
 
+import com.google.gson.Gson;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,15 +18,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import jogamp.nativetag.common.linux.i586.TAG;
+import sample.database.DataManager;
 import sample.model.*;
 import sample.model.enums.TAGS;
 import sample.model.physics.BoxCollider;
+import sample.model.physics.PhysicsEngine;
 import sample.model.shapes.CustomShape;
 import sample.model.shapes.CustomSquare;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class LevelEditor {
@@ -52,10 +56,12 @@ public class LevelEditor {
     private Point canvasInitialPoint;
     private Point squareInitialPoint;
     private Stage stage;
+    DataManager dataManager;
 
 
     public void startEditor(Stage stage) {
         this.stage = stage;
+        dataManager = new DataManager(stage);
         getCanvasInitialPoint();
         getSquareInitialPoint();
         graphicsContext = canvas.getGraphicsContext2D();
@@ -79,6 +85,7 @@ public class LevelEditor {
         stage.setResizable(false);
         stage.setScene(new Scene(root, 750, 750));
         stage.show();
+        toggleObjectSelected(false);
         ((Game) fxmlLoader.getController()).startGame(objectsOnCanvas);
         ((Node) event.getSource()).getScene().getWindow().hide();
 
@@ -181,8 +188,16 @@ public class LevelEditor {
     }
 
     void inspectObject(CustomSquare customSquare) {
+        toggleObjectSelected(false);
         currentShapeSelected = customSquare;
+        toggleObjectSelected(true);
         updateFields();
+    }
+
+    private void toggleObjectSelected(boolean value) {
+        if(currentShapeSelected !=null){
+            currentShapeSelected.setSelectedInEditor(value);
+        }
     }
 
     private void updateFields() {
@@ -299,14 +314,10 @@ public class LevelEditor {
     }
 
     public void openImageExplorer() {
-            FileChooser fileChooser = new FileChooser();
-            FileChooser.ExtensionFilter extensionFilter= new FileChooser.ExtensionFilter("jpg files", "*.jpg");
-            fileChooser.getExtensionFilters().add(extensionFilter);
-            fileChooser.setTitle("Select an image");
-            File  file = fileChooser.showOpenDialog(stage);
+           File file = dataManager.getFileFromOpenDialog();
             if(file!=null){
                 Image image = new Image(file.toURI().toString());
-                ((CustomSquare) currentShapeSelected).setImage(image);
+                currentShapeSelected.setImage(image);
             }
 
 
@@ -327,6 +338,16 @@ public class LevelEditor {
             }
         }
         return false;
+    }
+
+    @FXML
+    private void saveLevel(){
+        dataManager.saveObjects(objectsOnCanvas);
+
+    }
+    @FXML
+    private void loadSaveFile(){
+        dataManager.getSaveData();
     }
 
 

@@ -24,8 +24,8 @@ public class Inspector {
 
     private void setListener(){
         canvas.setOnMouseClicked(event -> {
-            CustomSquare objectClicked = getObjectClicked(event.getSceneX() -225,
-                    event.getSceneY()-50);
+            CustomSquare objectClicked = getObjectClicked(event.getSceneX() -canvas.getLayoutX(),
+                    event.getSceneY()-canvas.getLayoutY());
             levelEditor.inspectObject(objectClicked);
         });
 
